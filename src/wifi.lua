@@ -1,4 +1,12 @@
 local ip = wifi.sta.getip()
+if not ip == nil then
+  print('Found IP:' .. ip)
+end
+if wifi.sta.status() == wifi.STA_GOTIP then
+  print('WiFi already connected')
+  return
+end
+
 local station_cfg={}
 station_cfg.ssid=SSID
 station_cfg.pwd=PASSWORD
@@ -17,4 +25,3 @@ else
   wifi.sta.connect()
   wifi.sta.setip({ip=IP,netmask="255.255.255.0",gateway=GETEWAYIP})
 end
-print('Found IP:' .. ip)

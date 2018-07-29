@@ -15,26 +15,32 @@ function measure_callback(dist)
         val = ((d - MINDIST) / RANGE) * 100
       end
       if DEBUG then print('Brightness ' .. val) end
-      lifx.setBrightness(val, FADETIME, LIGHT)
+      lifx.setBrightness(val, FADETIME, LIGHT, startTimer)
+      return nil
     elseif d < MINDIST and d > 0 then
       if DEBUG then print('Light Off') end
-      lifx.lightOff(LIGHT)
+      lifx.lightOff(LIGHT, startTimer)
+      return nil
     end
   end
   prev = dist
-  if node.heap() < 4000 then node.restart() end
-  tmr.delay(10)
+  startTimer()
 end
 
 function startTimer()
-  if DEBUG then print('Timer started') end
-  tmr.alarm(3, REFRESH, tmr.ALARM_AUTO, function() hcsr04(TRIG, ECHO, AVG, MEASURE_TIMER, measure_callback); end)
+  if DEBUG then print('Timer started, heap ' .. node.heap()) end
+  if node.heap() < 4000 then collectgarbage() end
+  hcsr04(TRIG, ECHO, AVG, MEASURE_TIMER, measure_callback)
 end
 
-wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, function()
-  wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, 'unreg')
-  if DEBUG then print(wifi.sta.getip()) end
-  lifx.init(BASEURL, LIGHT, startTimer)
-end)
-
-wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, wifi.sta.connect)
+if wifi.sta.status() == wifi.STA_GOTIP then
+  lifx.init(BASEURL, LIGHT, 4, startTimer)
+  startTimer()
+else
+  wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, function()
+    wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, 'unreg')
+    if DEBUG then print(wifi.sta.getip()) end
+    lifx.init(BASEURL, LIGHT, 4, startTimer)
+    startTimer()
+  end)
+end
