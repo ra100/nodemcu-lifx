@@ -6,7 +6,7 @@ local prev = -1 -- previous distance value
 function measure_callback(dist)
   if DEBUG then print('measure ' .. dist) end
   if (math.abs(dist - prev) < 0.2) then
-    if DEBUG then print('distance ' .. dist) end
+    if DEBUG then print('distance detected') end
     local d = (prev + dist) / 2
     if d > MINDIST and d < (MAXRANGE + MAXDIST) then
       if d > MAXDIST then
@@ -24,12 +24,12 @@ function measure_callback(dist)
     end
   end
   prev = dist
-  startTimer()
+  tmr.alarm(1, 50, tmr.ALARM_SINGLE, startTimer)
 end
 
 function startTimer()
   if DEBUG then print('Timer started, heap ' .. node.heap()) end
-  if node.heap() < 4000 then collectgarbage() end
+  -- if node.heap() < 4000 then collectgarbage() end
   hcsr04(TRIG, ECHO, AVG, MEASURE_TIMER, measure_callback)
 end
 
