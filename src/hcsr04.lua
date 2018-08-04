@@ -36,8 +36,8 @@ return function(trig_pin, echo_pin, sample_cnt, timer_id, report_cb)
         if DEBUG then
           for j = 1, sample_count do print(("Sample %u is %u"):format(j,result[j])) end
         end
-        total = total - result[0] -- substract sample one because it is usually off...
-        return report_cb(total / (5820 * (sample_count - 1)))
+        total = total
+        return report_cb(total / (5820 * sample_count))
       end
     end
 

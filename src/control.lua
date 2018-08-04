@@ -15,16 +15,16 @@ function measure_callback(dist)
         val = ((d - MINDIST) / RANGE) * 100
       end
       if DEBUG then print('Brightness ' .. val) end
-      lifx.setBrightness(val, FADETIME, LIGHT, startTimer)
+      lifx.setBrightness(val, FADETIME, LIGHT, function() tmr.alarm(1, 100, tmr.ALARM_SINGLE, startTimer) end)
       return nil
     elseif d < MINDIST and d > 0 then
       if DEBUG then print('Light Off') end
-      lifx.lightOff(LIGHT, startTimer)
+      lifx.lightOff(LIGHT, function() tmr.alarm(1, 100, tmr.ALARM_SINGLE, startTimer) end)
       return nil
     end
   end
   prev = dist
-  tmr.alarm(1, 50, tmr.ALARM_SINGLE, startTimer)
+  tmr.alarm(1, 100, tmr.ALARM_SINGLE, startTimer)
 end
 
 function startTimer()
