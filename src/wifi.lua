@@ -1,17 +1,18 @@
 local ip = wifi.sta.getip()
 if not ip == nil then
-  print('Found IP:' .. ip)
+  IP = ip
+  print("Found IP:" .. ip)
 end
 if wifi.sta.status() == wifi.STA_GOTIP then
-  print('WiFi already connected')
+  print("WiFi already connected")
   return
 end
 
-local station_cfg={}
-station_cfg.ssid=SSID
-station_cfg.pwd=PASSWORD
-station_cfg.save=true
-if ip == nil and IP == '' then
+local station_cfg = {}
+station_cfg.ssid = SSID
+station_cfg.pwd = PASSWORD
+station_cfg.save = true
+if IP == "" then
   wifi.setmode(wifi.STATION)
   wifi.setphymode(wifi.PHYMODE_N)
   wifi.sta.config(station_cfg)
@@ -23,5 +24,5 @@ else
   wifi.sta.config(station_cfg)
   wifi.sleeptype(wifi.LIGHT_SLEEP)
   wifi.sta.connect()
-  wifi.sta.setip({ip=IP,netmask="255.255.255.0",gateway=GETEWAYIP})
+  wifi.sta.setip({ip = IP, netmask = "255.255.255.0", gateway = GETEWAYIP})
 end

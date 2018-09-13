@@ -1,6 +1,24 @@
-tmr.alarm(1, 1000, tmr.ALARM_SINGLE, function()
-  dofile('config.lua')
-  dofile('wifi.lua')
-  dofile('control.lua')
-end)
+function compile_remove(f)
+  node.compile(f)
+  file.remove(f)
+end
 
+local files = {
+  "wifi.lua",
+  "lifx.lua",
+  "hcsr04.lua",
+  "control.lua"
+}
+
+local filelist = file.list()
+
+for i, f in ipairs(files) do
+  if (filelist[f]) then
+    print("compiling " .. f)
+    compile_remove(f)
+  end
+end
+
+dofile("config.lua")
+dofile("wifi.lc")
+dofile("control.lc")
