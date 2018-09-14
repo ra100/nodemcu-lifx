@@ -71,3 +71,11 @@ else
     end
   )
 end
+
+function restart()
+  print("restart")
+  node.restart()
+end
+
+tmr.alarm(3, AUTORESTART, tmr.ALARM_SINGLE, restart)
+
