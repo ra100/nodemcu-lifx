@@ -44,7 +44,7 @@ function measure_callback(dist)
     end
   end
   prev = dist
-  tmr.alarm(1, 100, tmr.ALARM_SINGLE, startTimer)
+  tmr.alarm(1, REFRESH, tmr.ALARM_SINGLE, startTimer)
 end
 
 function startTimer()
